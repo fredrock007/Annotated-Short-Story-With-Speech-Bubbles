@@ -153,9 +153,10 @@
     </div>
 
     <div class="controls">
-      <button id="toggleAll" aria-pressed="false">Show/Hide All Annotations</button></div>
+      <button id="toggleAll" aria-pressed="false">Show Annotations</button>
+    </div>
 
-    <section class="story" id="story">
+    <section class="story hidden-annotations" id="story">
 
       <!-- LINE 1 -->
       <div class="line scene">
@@ -248,10 +249,36 @@
 
   <script>
     const story = document.getElementById('story');
-    const toggleAllBtn = document.getElementById('toggleAll');toggleAllBtn.addEventListener('click', () => {
-      story.classList.toggle('hidden-annotations');
-      const pressed = toggleAllBtn.getAttribute('aria-pressed') === 'true';
-      toggleAllBtn.setAttribute('aria-pressed', String(!pressed));
-    });</script>
+    const toggleAllBtn = document.getElementById('toggleAll');
+
+    // Ensure annotations are hidden on first load
+    story.classList.add('hidden-annotations');
+    toggleAllBtn.textContent = 'Show Annotations';
+    toggleAllBtn.setAttribute('aria-pressed','false');
+
+    // Toggle handler
+    toggleAllBtn.addEventListener('click', () => {
+      const nowHidden = story.classList.toggle('hidden-annotations');
+      toggleAllBtn.textContent = nowHidden ? 'Show Annotations' : 'Hide Annotations';
+      toggleAllBtn.setAttribute('aria-pressed', String(!nowHidden));
+    });
+
+    // --- Simple test harness (run in console: runAnnotationTests()) ---
+    function runAnnotationTests(){
+      const results = [];
+      // Test 1: hidden by default
+      results.push({test:'initially hidden', pass: story.classList.contains('hidden-annotations')});
+      // Test 2: click shows annotations
+      toggleAllBtn.click();
+      const afterFirst = !story.classList.contains('hidden-annotations') && toggleAllBtn.getAttribute('aria-pressed')==='true' && /Hide/.test(toggleAllBtn.textContent);
+      results.push({test:'after 1st click visible + aria', pass: afterFirst});
+      // Test 3: click hides again
+      toggleAllBtn.click();
+      const afterSecond = story.classList.contains('hidden-annotations') && toggleAllBtn.getAttribute('aria-pressed')==='false' && /Show/.test(toggleAllBtn.textContent);
+      results.push({test:'after 2nd click hidden + aria', pass: afterSecond});
+      console.table(results);
+      return results.every(r=>r.pass);
+    }
+  </script>
 </body>
 </html>

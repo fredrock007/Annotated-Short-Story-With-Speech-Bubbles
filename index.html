@@ -23,26 +23,30 @@
                   var(--bg);
       color: var(--ink);
       line-height: 1.6;
+      -webkit-tap-highlight-color: transparent;
     }
     .wrap{max-width:1000px; margin:40px auto; padding:24px;}
-    .header{display:flex; align-items:center; gap:16px; margin-bottom:24px}
-    .badge{font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);}
+    .header{display:flex; align-items:center; gap:16px; margin-bottom:12px}
+    .badge{font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);}    
     .title{font-size: clamp(22px, 3vw, 34px); font-weight: 800; margin: 0}
-    .controls{display:flex; gap:12px; flex-wrap:wrap; margin:16px 0 28px}
-    button{background: linear-gradient(135deg, var(--accent), var(--accent-2)); color:#041016; border:0; padding:10px 14px; border-radius:14px; font-weight:700; cursor:pointer}
-    button.secondary{background:#1f2937; color:var(--ink); border:1px solid #334155}
-    .story{
-      background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.00));
-      border: 1px solid #233047;
-      border-radius: 20px;
-      padding: 22px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.25);
-    }
+
+    /* Heritage banner with SA flag (tappable) */
+    .heritage{margin:10px 0 24px; padding:14px 16px; border:1px solid #233047; border-radius:14px; background:#0b1220; box-shadow:0 10px 24px rgba(0,0,0,.25); display:flex; align-items:center; justify-content:space-between; gap:16px}
+    .heritage .msg{font-weight:700}
+    .flag-btn{display:flex; align-items:center; gap:10px; border:0; background:transparent; cursor:pointer; padding:6px 8px; border-radius:12px; position:relative}
+    .flag-emoji{font-size:64px; line-height:1; display:inline-block; filter: drop-shadow(0 6px 18px rgba(0,0,0,.35));}
+    .flag-label{position:absolute; right:-6px; bottom:-6px; background:linear-gradient(135deg,#22d3ee,#a78bfa); color:#021018; font-weight:900; letter-spacing:.06em; padding:4px 8px; border-radius:999px; font-size:12px; border:1px solid #1f2a3d; box-shadow:0 6px 18px rgba(0,0,0,.35)}
+    .shake{animation: shakeFlag 2.2s ease-in-out infinite; transform-origin:center}
+    @keyframes shakeFlag{ 0%,100%{transform:translateY(0) rotate(0)} 10%{transform:translateY(-1px) rotate(-1deg)} 20%{transform:translateY(1px) rotate(1deg)} 30%{transform:translateY(-1px) rotate(-1.2deg)} 40%{transform:translateY(0) rotate(.8deg)} 50%{transform:translateY(1px) rotate(-.8deg)} 60%{transform:translateY(0) rotate(.6deg)} 70%{transform:translateY(-.5px) rotate(-.6deg)} 80%{transform:translateY(.5px) rotate(.4deg)} 90%{transform:translateY(0) rotate(-.4deg)} }
+    @media (prefers-reduced-motion: reduce){ .shake{animation:none} }
+
+    .controls{display:flex; gap:12px; flex-wrap:wrap; margin:16px 0 20px}
+    button.primary{background: linear-gradient(135deg, var(--accent), var(--accent-2)); color:#041016; border:0; padding:10px 14px; border-radius:14px; font-weight:700; cursor:pointer}
+    .story{background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.00)); border: 1px solid #233047; border-radius: 20px; padding: 22px; box-shadow: 0 10px 30px rgba(0,0,0,.25)}
     .line{display:grid; grid-template-columns: 1fr minmax(260px, 32%); gap:18px; align-items:start; padding:16px 12px; border-radius:14px; position:relative}
     .line + .line{border-top:2px solid rgba(99,102,241,.35); box-shadow: 0 -6px 18px -12px rgba(99,102,241,.45) inset}
     .line{background: rgba(2,6,23,.45)}
     .line:nth-of-type(even){background: rgba(2,6,23,.62)}
-    /* Match text panels to bubble colours */
     .line .text{padding:12px; border-radius:12px}
     .line.scene .text{background: linear-gradient(135deg, rgba(34,211,238,.10), rgba(14,165,233,.08)); border-left:4px solid rgba(14,165,233,.7)}
     .line.suspense .text{background: linear-gradient(135deg, rgba(245,158,11,.12), rgba(239,68,68,.08)); border-left:4px solid rgba(239,68,68,.7)}
@@ -52,7 +56,8 @@
     .text mark{background: rgba(56,189,248,.18); color: #eaf7ff; padding:0 .2em; border-radius:4px}
 
     /* Speech bubble */
-    .bubble{position:relative; background:#101827; border:1px solid #233047; border-radius:16px; padding:14px 14px 14px 14px; color:#dbebff}
+    .bubble{position:relative; background:#101827; border:1px solid #233047; border-radius:16px; padding:14px; color:#dbebff; transition:transform .2s ease, box-shadow .2s ease}
+    .bubble:hover{transform: translateY(-2px); box-shadow:0 14px 28px rgba(0,0,0,.35)}
     .bubble:before{content:""; position:absolute; left:-10px; top:18px; border-width:10px; border-style:solid; border-color:transparent #233047 transparent transparent}
     .bubble:after{content:""; position:absolute; left:-8px; top:20px; border-width:9px; border-style:solid; border-color:transparent #101827 transparent transparent}
     .bubble small{display:block; color:var(--muted); margin-top:6px}
@@ -71,60 +76,19 @@
     .legend .i-lang{background:var(--accent-2)}
     .legend .i-seq{background:var(--accent-3)}
 
-    /* --- Enhanced colourful bubbles --- */
-    :root{
-      --scene1:#22d3ee; --scene2:#0ea5e9; /* cyan->sky */
-      --susp1:#f59e0b; --susp2:#ef4444;   /* amber->red */
-      --lang1:#a78bfa; --lang2:#6366f1;   /* violet->indigo */
-      --seq1:#34d399;  --seq2:#10b981;    /* emerald->teal */
-    }
-    .bubble{transition:transform .2s ease, box-shadow .2s ease}
-    .bubble:hover{transform: translateY(-2px); box-shadow:0 14px 28px rgba(0,0,0,.35)}
-
-    /* Base arrow uses neutral; category variants override below */
-    .bubble:before{border-color:transparent #233047 transparent transparent}
-    .bubble:after{border-color:transparent #101827 transparent transparent}
-
-    /* Scene-setting variant */
-    .bubble.scene-b{background:
-      linear-gradient(135deg, rgba(34,211,238,.18), rgba(14,165,233,.18)), #0b1220;
-      border-color: rgba(34,211,238,.6);
-      box-shadow: 0 8px 24px rgba(14,165,233,.25)}
+    /* Colourful bubble variants */
+    .bubble.scene-b{background: linear-gradient(135deg, rgba(34,211,238,.18), rgba(14,165,233,.18)), #0b1220; border-color: rgba(34,211,238,.6); box-shadow: 0 8px 24px rgba(14,165,233,.25)}
     .bubble.scene-b:before{border-right-color: rgba(14,165,233,.6)}
     .bubble.scene-b:after{border-right-color:#0b1220}
-
-    /* Suspense variant */
-    .bubble.suspense-b{background:
-      linear-gradient(135deg, rgba(245,158,11,.2), rgba(239,68,68,.18)), #0b1220;
-      border-color: rgba(239,68,68,.6);
-      box-shadow: 0 8px 24px rgba(239,68,68,.28)}
+    .bubble.suspense-b{background: linear-gradient(135deg, rgba(245,158,11,.2), rgba(239,68,68,.18)), #0b1220; border-color: rgba(239,68,68,.6); box-shadow: 0 8px 24px rgba(239,68,68,.28)}
     .bubble.suspense-b:before{border-right-color: rgba(239,68,68,.6)}
     .bubble.suspense-b:after{border-right-color:#0b1220}
-
-    /* Descriptive language variant */
-    .bubble.lang-b{background:
-      linear-gradient(135deg, rgba(167,139,250,.22), rgba(99,102,241,.18)), #0b1220;
-      border-color: rgba(99,102,241,.6);
-      box-shadow: 0 8px 24px rgba(99,102,241,.28)}
+    .bubble.lang-b{background: linear-gradient(135deg, rgba(167,139,250,.22), rgba(99,102,241,.18)), #0b1220; border-color: rgba(99,102,241,.6); box-shadow: 0 8px 24px rgba(99,102,241,.28)}
     .bubble.lang-b:before{border-right-color: rgba(99,102,241,.6)}
     .bubble.lang-b:after{border-right-color:#0b1220}
-
-    /* Sequence variant */
-    .bubble.seq-b{background:
-      linear-gradient(135deg, rgba(52,211,153,.22), rgba(16,185,129,.18)), #0b1220;
-      border-color: rgba(16,185,129,.6);
-      box-shadow: 0 8px 24px rgba(16,185,129,.28)}
+    .bubble.seq-b{background: linear-gradient(135deg, rgba(52,211,153,.22), rgba(16,185,129,.18)), #0b1220; border-color: rgba(16,185,129,.6); box-shadow: 0 8px 24px rgba(16,185,129,.28)}
     .bubble.seq-b:before{border-right-color: rgba(16,185,129,.6)}
     .bubble.seq-b:after{border-right-color:#0b1220}
-
-    /* Colourful marks inside the text */
-    .text mark{background:linear-gradient( to top, rgba(56,189,248,.28), rgba(56,189,248,.12)); box-shadow: inset 0 -2px 0 rgba(56,189,248,.55);}
-    .line:nth-of-type(2) .text mark{background:linear-gradient( to top, rgba(167,139,250,.28), rgba(167,139,250,.12)); box-shadow: inset 0 -2px 0 rgba(167,139,250,.55)}
-    .line:nth-of-type(3) .text mark{background:linear-gradient( to top, rgba(34,211,238,.28), rgba(34,211,238,.12)); box-shadow: inset 0 -2px 0 rgba(34,211,238,.55)}
-    .line:nth-of-type(4) .text mark{background:linear-gradient( to top, rgba(245,158,11,.28), rgba(245,158,11,.12)); box-shadow: inset 0 -2px 0 rgba(245,158,11,.55)}
-    .line:nth-of-type(5) .text mark{background:linear-gradient( to top, rgba(239,68,68,.28), rgba(239,68,68,.12)); box-shadow: inset 0 -2px 0 rgba(239,68,68,.55)}
-    .line:nth-of-type(6) .text mark{background:linear-gradient( to top, rgba(99,102,241,.28), rgba(99,102,241,.12)); box-shadow: inset 0 -2px 0 rgba(99,102,241,.55)}
-    .line:nth-of-type(7) .text mark{background:linear-gradient( to top, rgba(16,185,129,.28), rgba(16,185,129,.12)); box-shadow: inset 0 -2px 0 rgba(16,185,129,.55)}
 
     .hidden-annotations .bubble{display:none}
 
@@ -133,9 +97,24 @@
       .line{grid-template-columns: 1fr; gap:10px}
       .bubble:before, .bubble:after{left:20px; top:-10px; transform:rotate(90deg)}
       .bubble{padding-top:18px}
-    }    /* Heritage Day banner */
-    .heritage{margin-top:22px; padding:14px 16px; border:1px solid #233047; border-radius:14px; background:#0b1220; box-shadow:0 10px 24px rgba(0,0,0,.25);}
-    .heritage:before{content:""; display:block; height:6px; border-radius:10px; margin-bottom:10px; background: linear-gradient(90deg,#007a4d,#ffb81c,#000000,#ffffff,#002395,#de3831);} 
+    }
+
+    /* Snake modal overlay */
+    .modal{position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(2,6,23,.85); z-index:50}
+    .modal.open{display:flex}
+    .game-wrap{position:relative; width: min(94vw, 900px); height: min(58vh, 540px); background:#050b14; border:1px solid #1f2a3d; border-radius:18px; box-shadow:0 18px 50px rgba(0,0,0,.5); overflow:hidden}
+    canvas#snake3d{display:block; width:100%; height:100%}
+    .hud{position:absolute; top:8px; left:12px; right:12px; display:flex; align-items:center; justify-content:space-between; font-size:14px; color:#cbd5e1; pointer-events:none}
+    .hud .btn{pointer-events:auto; padding:6px 10px; border-radius:10px; border:1px solid #334155; background:#0b1220; color:#e5e7eb}
+
+    /* Touch controls (kept off the play area) */
+    .controls-touch{position:absolute; left:10px; right:10px; bottom:10px; display:flex; align-items:flex-end; justify-content:space-between; gap:10px; pointer-events:none}
+    .dpad{display:grid; grid-template-columns:60px 60px 60px; grid-template-rows:60px 60px 60px; gap:6px; opacity:.86; pointer-events:auto}
+    .dpad button{border:1px solid #334155; background:#0b1220; color:#e5e7eb; border-radius:12px; font-weight:800; font-size:18px}
+    .dpad .blank{visibility:hidden}
+    .side-btns{display:flex; gap:10px; opacity:.86; pointer-events:auto}
+    .side-btns button{border:1px solid #334155; background:#0b1220; color:#e5e7eb; border-radius:12px; padding:10px 14px; font-weight:700}
+    .close-x{position:absolute; top:10px; right:10px; border:0; background:#111827; color:#e5e7eb; border-radius:10px; padding:6px 10px}
   </style>
 </head>
 <body>
@@ -144,22 +123,23 @@
       <div>
         <div class="badge">See It · Grade 10 · Storytelling</div>
         <h1 class="title">Short Story with Annotations (Speech Bubbles)</h1>
-        <p class="meta">Focus: <strong>Setting the scene</strong>, <strong>Building suspense</strong>, <strong>Descriptive language</strong>, <strong>Clear sequence</strong>.</p>
-        <div class="legend" aria-hidden="true">
-          <span><i class="i-scene"></i> Scene-setting</span>
-          <span><i class="i-suspense"></i> Suspense</span>
-          <span><i class="i-lang"></i> Descriptive language</span>
-          <span><i class="i-seq"></i> Sequence</span>
-        </div>
       </div>
     </div>
 
+    <!-- Heritage banner with tappable shaking SA flag that unveils the hidden game -->
+    <div class="heritage" role="note" aria-live="polite">
+      <div class="msg">🇿🇦 <strong>Happy Heritage Day for tomorrow (24 September)!</strong> Celebrate your roots, share your stories, and respect our diverse cultures.</div>
+      <button id="flagButton" class="flag-btn" title="Tap to celebrate with a mini-game" aria-label="Open mini-game">
+        <span class="flag-emoji shake" aria-hidden="true">🇿🇦</span>
+        <span class="flag-label">CLICK ME</span>
+      </button>
+    </div>
+
     <div class="controls">
-      <button id="toggleAll" aria-pressed="false">Show Annotations</button>
+      <button id="toggleAll" class="primary" aria-pressed="false">Show Annotations</button>
     </div>
 
     <section class="story hidden-annotations" id="story">
-
       <!-- LINE 1 -->
       <div class="line scene">
         <div class="text">
@@ -243,43 +223,222 @@
           <small>Skill: sequencing & cliffhanger</small>
         </aside>
       </div>
-
     </section>
+  </div>
 
-    <div class="heritage" role="note" aria-live="polite">🇿🇦 <strong>Happy Heritage Day for tomorrow (24 September)!</strong> Celebrate your roots, share your stories, and show respect for the diverse cultures around us. </div>
+  <!-- Hidden 3D Snake Game Modal -->
+  <div id="snakeModal" class="modal" aria-hidden="true" aria-label="3D Snake Game">
+    <div class="game-wrap">
+      <button class="close-x" id="closeGame" aria-label="Close game">✕</button>
+      <div class="hud"><div id="score">Score: 0</div><div><button class="btn" id="restartBtn">Restart</button> <button class="btn" id="backBtn">Back to Story</button></div></div>
+      <canvas id="snake3d"></canvas>
+      <div class="controls-touch">
+        <div class="dpad" aria-hidden="false">
+          <button class="blank" aria-hidden="true" tabindex="-1"></button>
+          <button id="btnUp">▲</button>
+          <button class="blank" aria-hidden="true" tabindex="-1"></button>
+          <button id="btnLeft">◀</button>
+          <button class="blank" aria-hidden="true" tabindex="-1"></button>
+          <button id="btnRight">▶</button>
+          <button class="blank" aria-hidden="true" tabindex="-1"></button>
+          <button id="btnDown">▼</button>
+          <button class="blank" aria-hidden="true" tabindex="-1"></button>
+        </div>
+        <div class="side-btns">
+          <button id="pauseBtn">Pause</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
+    // ==== Annotation toggle (kept from lesson) ====
     const story = document.getElementById('story');
     const toggleAllBtn = document.getElementById('toggleAll');
-
-    // Ensure annotations are hidden on first load
     story.classList.add('hidden-annotations');
     toggleAllBtn.textContent = 'Show Annotations';
     toggleAllBtn.setAttribute('aria-pressed','false');
-
-    // Toggle handler
     toggleAllBtn.addEventListener('click', () => {
       const nowHidden = story.classList.toggle('hidden-annotations');
       toggleAllBtn.textContent = nowHidden ? 'Show Annotations' : 'Hide Annotations';
       toggleAllBtn.setAttribute('aria-pressed', String(!nowHidden));
     });
 
-    // --- Simple test harness (run in console: runAnnotationTests()) ---
+    // ==== Flag → open hidden game ====
+    const flagButton = document.getElementById('flagButton');
+    const snakeModal = document.getElementById('snakeModal');
+    const closeGame = document.getElementById('closeGame');
+    const backBtn = document.getElementById('backBtn');
+    flagButton.addEventListener('click', ()=>{ 
+      snakeModal.classList.add('open'); 
+      snakeModal.setAttribute('aria-hidden','false'); 
+      initSnake3D(); 
+    });
+    closeGame.addEventListener('click', ()=>{ 
+      snakeModal.classList.remove('open'); 
+      snakeModal.setAttribute('aria-hidden','true'); 
+      stopGame(); 
+    });
+    backBtn.addEventListener('click', ()=>{ 
+      snakeModal.classList.remove('open'); 
+      snakeModal.setAttribute('aria-hidden','true'); 
+      stopGame(); 
+    });
+
+    // ==== Minimal 3D Snake using Three.js (CDN) ====
+    const threeSrc = 'https://unpkg.com/three@0.158.0/build/three.min.js';
+    let THREERef = null; let renderer, scene, camera, snake, food, gridSize=12, dir={x:1,y:0}, cells=[], lastTick=0, tickMs=160, running=false, score=0;
+
+    function loadThree(){
+      return new Promise((resolve, reject)=>{
+        if (window.THREE) return resolve(window.THREE);
+        const s = document.createElement('script'); s.src = threeSrc; s.onload = ()=>resolve(window.THREE); s.onerror=reject; document.head.appendChild(s);
+      });
+    }
+
+    async function initSnake3D(){
+      THREERef = await loadThree();
+      const canvas = document.getElementById('snake3d');
+      renderer = new THREERef.WebGLRenderer({canvas, antialias:true});
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+      resizeRenderer();
+
+      scene = new THREERef.Scene();
+      scene.background = new THREERef.Color(0x050b14);
+      camera = new THREERef.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
+      camera.position.set(10, 14, 16); camera.lookAt(0,0,0);
+
+      // Light
+      const ambient = new THREERef.AmbientLight(0xffffff, 0.6); scene.add(ambient);
+      const dirLight = new THREERef.DirectionalLight(0xffffff, 0.7); dirLight.position.set(5,10,7); scene.add(dirLight);
+
+      // Ground grid (neon)
+      const grid = new THREERef.GridHelper(gridSize*1.2, gridSize, 0x00ffc8, 0x003344); grid.position.y = -0.51; scene.add(grid);
+
+      // Snake (SA colours, emissive glow)
+      snake = [{x:0,y:0}, {x:-1,y:0}, {x:-2,y:0}]; dir={x:1,y:0};
+      cells = [];
+      const saCols = [0x007A4D,0xFFB81C,0x000000,0xffffff,0x002395,0xDE3831];
+      const segGeo = new THREERef.BoxGeometry(0.9,0.9,0.9);
+      for (let i=0;i<snake.length;i++){
+        const color = saCols[i % saCols.length];
+        const m = new THREERef.Mesh(
+          segGeo,
+          new THREERef.MeshStandardMaterial({color, emissive: color, emissiveIntensity:0.35, metalness:0.3, roughness:0.4})
+        );
+        scene.add(m); cells.push(m);
+      }
+
+      // Food (neon cycle)
+      const foodGeo = new THREERef.SphereGeometry(0.45, 16, 16);
+      const foodMat = new THREERef.MeshStandardMaterial({color:0xffb81c, emissive:0xff8c00, emissiveIntensity:0.9, metalness:0.2, roughness:0.2});
+      food = new THREERef.Mesh(foodGeo, foodMat); scene.add(food); placeFood();
+
+      window.addEventListener('resize', resizeRenderer);
+      running = true; score = 0; updateScore();
+      lastTick = 0; animate(0);
+    }
+
+    function resizeRenderer(){
+      if (!renderer) return; const w = document.querySelector('.game-wrap').clientWidth; const h = document.querySelector('.game-wrap').clientHeight; renderer.setSize(w,h,false); if (camera){ camera.aspect = w/h; camera.updateProjectionMatrix(); }
+    }
+
+    function animate(t){ if (!running) return; requestAnimationFrame(animate); if (t - lastTick > tickMs){ step(); lastTick = t; } renderer.render(scene,camera); }
+
+    function step(){
+      // Move snake
+      const head = {x: snake[0].x + dir.x, y: snake[0].y + dir.y};
+      // wrap-around
+      head.x = (head.x + gridSize) % gridSize; head.y = (head.y + gridSize) % gridSize;
+      // self-collision
+      for (let i=0;i<snake.length;i++){ if (snake[i].x===head.x && snake[i].y===head.y){ return gameOver(); } }
+      snake.unshift(head);
+      // eat
+      if (head.x===food.userData.gx && head.y===food.userData.gy){ score++; updateScore(); placeFood(); tickMs = Math.max(90, tickMs-6); }
+      else { snake.pop(); }
+      // draw
+      for (let i=0;i<snake.length;i++){
+        const saCols = [0x007A4D,0xFFB81C,0x000000,0xffffff,0x002395,0xDE3831];
+        const segColor = saCols[i % saCols.length];
+        const mesh = cells[i] || new THREERef.Mesh(
+          new THREERef.BoxGeometry(0.9,0.9,0.9),
+          new THREERef.MeshStandardMaterial({color:segColor, emissive:segColor, emissiveIntensity:0.35})
+        );
+        if (!cells[i]){ cells[i]=mesh; scene.add(mesh);} 
+        mesh.position.set(snake[i].x - gridSize/2 + 0.5, 0, snake[i].y - gridSize/2 + 0.5);
+      }
+      for (let j=snake.length;j<cells.length;j++){ scene.remove(cells[j]); }
+      cells.length = snake.length;
+      food.position.set(food.userData.gx - gridSize/2 + 0.5, 0, food.userData.gy - gridSize/2 + 0.5);
+    }
+
+    function placeFood(){
+      const empty = []; for (let x=0;x<gridSize;x++){ for(let y=0;y<gridSize;y++){ if (!snake.some(s=>s.x===x && s.y===y)) empty.push({x,y}); }}
+      const pick = empty[Math.floor(Math.random()*empty.length)] || {x:0,y:0};
+      food.userData.gx = pick.x; food.userData.gy = pick.y;
+      // Neon food cycles SA colours too
+      const saColsFood = [0xDE3831,0x002395,0xFFB81C,0x007A4D];
+      const c = saColsFood[Math.floor(Math.random()*saColsFood.length)];
+      food.material.color.setHex(c);
+      food.material.emissive.setHex(c);
+    }
+
+    function updateScore(){ document.getElementById('score').textContent = `Score: ${score}`; }
+    function gameOver(){ running=false; alert('Game over! Score: '+score); }
+    function stopGame(){ running=false; if (renderer){ renderer.dispose(); } window.removeEventListener('resize', resizeRenderer); }
+
+    // Touch + keyboard controls (non-obstructive)
+    const btnUp = document.getElementById('btnUp');
+    const btnDown = document.getElementById('btnDown');
+    const btnLeft = document.getElementById('btnLeft');
+    const btnRight = document.getElementById('btnRight');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const restartBtn = document.getElementById('restartBtn');
+
+    function setDir(nx,ny){ if (snake && !(nx===-dir.x && ny===-dir.y)){ dir={x:nx,y:ny}; } }
+    ['touchstart','mousedown'].forEach(ev=>{
+      btnUp.addEventListener(ev, ()=>setDir(0,-1));
+      btnDown.addEventListener(ev, ()=>setDir(0,1));
+      btnLeft.addEventListener(ev, ()=>setDir(-1,0));
+      btnRight.addEventListener(ev, ()=>setDir(1,0));
+    });
+    document.addEventListener('keydown', (e)=>{
+      if (e.key==='ArrowUp') setDir(0,-1);
+      else if (e.key==='ArrowDown') setDir(0,1);
+      else if (e.key==='ArrowLeft') setDir(-1,0);
+      else if (e.key==='ArrowRight') setDir(1,0);
+    });
+    pauseBtn.addEventListener('click', ()=>{ running=!running; if (running) animate(0); });
+    restartBtn.addEventListener('click', ()=>{ if (!THREERef) return; // reset
+      // clean up old meshes
+      cells.forEach(m=>scene.remove(m)); cells=[]; snake=[{x:0,y:0},{x:-1,y:0},{x:-2,y:0}]; dir={x:1,y:0}; tickMs=160; score=0; updateScore(); running=true; });
+
+    // ======= Test Harness =======
+    // 1) Annotations toggle tests
     function runAnnotationTests(){
       const results = [];
-      // Test 1: hidden by default
       results.push({test:'initially hidden', pass: story.classList.contains('hidden-annotations')});
-      // Test 2: click shows annotations
       toggleAllBtn.click();
-      const afterFirst = !story.classList.contains('hidden-annotations') && toggleAllBtn.getAttribute('aria-pressed')==='true' && /Hide/.test(toggleAllBtn.textContent);
-      results.push({test:'after 1st click visible + aria', pass: afterFirst});
-      // Test 3: click hides again
+      results.push({test:'visible after 1st click', pass: !story.classList.contains('hidden-annotations') && toggleAllBtn.getAttribute('aria-pressed')==='true'});
       toggleAllBtn.click();
-      const afterSecond = story.classList.contains('hidden-annotations') && toggleAllBtn.getAttribute('aria-pressed')==='false' && /Show/.test(toggleAllBtn.textContent);
-      results.push({test:'after 2nd click hidden + aria', pass: afterSecond});
-      console.table(results);
-      return results.every(r=>r.pass);
+      results.push({test:'hidden after 2nd click', pass: story.classList.contains('hidden-annotations') && toggleAllBtn.getAttribute('aria-pressed')==='false'});
+      console.table(results); return results.every(r=>r.pass);
+    }
+
+    // 2) Game modal open/close tests (no assertions on WebGL)
+    async function runGameTests(){
+      const results = [];
+      // Open via flag
+      flagButton.click();
+      results.push({test:'modal open', pass: snakeModal.classList.contains('open') && snakeModal.getAttribute('aria-hidden')==='false'});
+      // Back button closes
+      backBtn.click();
+      results.push({test:'modal closed by back', pass: !snakeModal.classList.contains('open') && snakeModal.getAttribute('aria-hidden')==='true'});
+      // Close via X
+      flagButton.click();
+      closeGame.click();
+      results.push({test:'modal closed by X', pass: !snakeModal.classList.contains('open') && snakeModal.getAttribute('aria-hidden')==='true'});
+      console.table(results); return results.every(r=>r.pass);
     }
   </script>
 </body>

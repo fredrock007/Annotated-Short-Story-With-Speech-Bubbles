@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Annotated Short Story – Speech Bubbles</title>
+  <style>
+    :root{
+      --bg: #0f172a;          /* slate-900 */
+      --panel: #111827;       /* gray-900 */
+      --ink: #e5e7eb;         /* gray-200 */
+      --muted: #9ca3af;       /* gray-400 */
+      --accent: #38bdf8;      /* sky-400 */
+      --accent-2: #a78bfa;    /* violet-400 */
+      --accent-3: #34d399;    /* emerald-400 */
+      --warning: #f59e0b;     /* amber-500 */
+    }
+    html,body{height:100%}
+    body{
+      margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1000px 600px at 10% -10%, rgba(56,189,248,.15), transparent 60%),
+                  radial-gradient(800px 500px at 90% 0%, rgba(167,139,250,.12), transparent 60%),
+                  var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+    .wrap{max-width:1000px; margin:40px auto; padding:24px;}
+    .header{display:flex; align-items:center; gap:16px; margin-bottom:24px}
+    .badge{font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);}
+    .title{font-size: clamp(22px, 3vw, 34px); font-weight: 800; margin: 0}
+    .controls{display:flex; gap:12px; flex-wrap:wrap; margin:16px 0 28px}
+    button{background: linear-gradient(135deg, var(--accent), var(--accent-2)); color:#041016; border:0; padding:10px 14px; border-radius:14px; font-weight:700; cursor:pointer}
+    button.secondary{background:#1f2937; color:var(--ink); border:1px solid #334155}
+    .story{
+      background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.00));
+      border: 1px solid #233047;
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+    .line{display:grid; grid-template-columns: 1fr minmax(260px, 32%); gap:18px; align-items:start; padding:16px 12px; border-radius:14px; position:relative}
+    .line + .line{border-top:2px solid rgba(99,102,241,.35); box-shadow: 0 -6px 18px -12px rgba(99,102,241,.45) inset}
+    .line{background: rgba(2,6,23,.45)}
+    .line:nth-of-type(even){background: rgba(2,6,23,.62)}
+    /* Match text panels to bubble colours */
+    .line .text{padding:12px; border-radius:12px}
+    .line.scene .text{background: linear-gradient(135deg, rgba(34,211,238,.10), rgba(14,165,233,.08)); border-left:4px solid rgba(14,165,233,.7)}
+    .line.suspense .text{background: linear-gradient(135deg, rgba(245,158,11,.12), rgba(239,68,68,.08)); border-left:4px solid rgba(239,68,68,.7)}
+    .line.lang .text{background: linear-gradient(135deg, rgba(167,139,250,.12), rgba(99,102,241,.08)); border-left:4px solid rgba(99,102,241,.7)}
+    .line.seq .text{background: linear-gradient(135deg, rgba(52,211,153,.12), rgba(16,185,129,.08)); border-left:4px solid rgba(16,185,129,.7)}
+    .text p{margin:0; font-size: clamp(16px, 2vw, 18px)}
+    .text mark{background: rgba(56,189,248,.18); color: #eaf7ff; padding:0 .2em; border-radius:4px}
+
+    /* Speech bubble */
+    .bubble{position:relative; background:#101827; border:1px solid #233047; border-radius:16px; padding:14px 14px 14px 14px; color:#dbebff}
+    .bubble:before{content:""; position:absolute; left:-10px; top:18px; border-width:10px; border-style:solid; border-color:transparent #233047 transparent transparent}
+    .bubble:after{content:""; position:absolute; left:-8px; top:20px; border-width:9px; border-style:solid; border-color:transparent #101827 transparent transparent}
+    .bubble small{display:block; color:var(--muted); margin-top:6px}
+    .tag{display:inline-block; font-size:11px; padding:2px 8px; border-radius:999px; margin-right:6px; color:#041016; font-weight:800}
+    .tag.scene{background:var(--accent)}
+    .tag.suspense{background:var(--warning)}
+    .tag.lang{background:var(--accent-2)}
+    .tag.seq{background:var(--accent-3)}
+
+    .meta{color:var(--muted); font-size:14px; margin:8px 0 0}
+    .legend{display:flex; gap:10px; flex-wrap:wrap; font-size:12px; color:var(--muted)}
+    .legend span{display:inline-flex; align-items:center; gap:6px}
+    .legend i{width:10px; height:10px; border-radius:999px; display:inline-block}
+    .legend .i-scene{background:var(--accent)}
+    .legend .i-suspense{background:var(--warning)}
+    .legend .i-lang{background:var(--accent-2)}
+    .legend .i-seq{background:var(--accent-3)}
+
+    /* --- Enhanced colourful bubbles --- */
+    :root{
+      --scene1:#22d3ee; --scene2:#0ea5e9; /* cyan->sky */
+      --susp1:#f59e0b; --susp2:#ef4444;   /* amber->red */
+      --lang1:#a78bfa; --lang2:#6366f1;   /* violet->indigo */
+      --seq1:#34d399;  --seq2:#10b981;    /* emerald->teal */
+    }
+    .bubble{transition:transform .2s ease, box-shadow .2s ease}
+    .bubble:hover{transform: translateY(-2px); box-shadow:0 14px 28px rgba(0,0,0,.35)}
+
+    /* Base arrow uses neutral; category variants override below */
+    .bubble:before{border-color:transparent #233047 transparent transparent}
+    .bubble:after{border-color:transparent #101827 transparent transparent}
+
+    /* Scene-setting variant */
+    .bubble.scene-b{background:
+      linear-gradient(135deg, rgba(34,211,238,.18), rgba(14,165,233,.18)), #0b1220;
+      border-color: rgba(34,211,238,.6);
+      box-shadow: 0 8px 24px rgba(14,165,233,.25)}
+    .bubble.scene-b:before{border-right-color: rgba(14,165,233,.6)}
+    .bubble.scene-b:after{border-right-color:#0b1220}
+
+    /* Suspense variant */
+    .bubble.suspense-b{background:
+      linear-gradient(135deg, rgba(245,158,11,.2), rgba(239,68,68,.18)), #0b1220;
+      border-color: rgba(239,68,68,.6);
+      box-shadow: 0 8px 24px rgba(239,68,68,.28)}
+    .bubble.suspense-b:before{border-right-color: rgba(239,68,68,.6)}
+    .bubble.suspense-b:after{border-right-color:#0b1220}
+
+    /* Descriptive language variant */
+    .bubble.lang-b{background:
+      linear-gradient(135deg, rgba(167,139,250,.22), rgba(99,102,241,.18)), #0b1220;
+      border-color: rgba(99,102,241,.6);
+      box-shadow: 0 8px 24px rgba(99,102,241,.28)}
+    .bubble.lang-b:before{border-right-color: rgba(99,102,241,.6)}
+    .bubble.lang-b:after{border-right-color:#0b1220}
+
+    /* Sequence variant */
+    .bubble.seq-b{background:
+      linear-gradient(135deg, rgba(52,211,153,.22), rgba(16,185,129,.18)), #0b1220;
+      border-color: rgba(16,185,129,.6);
+      box-shadow: 0 8px 24px rgba(16,185,129,.28)}
+    .bubble.seq-b:before{border-right-color: rgba(16,185,129,.6)}
+    .bubble.seq-b:after{border-right-color:#0b1220}
+
+    /* Colourful marks inside the text */
+    .text mark{background:linear-gradient( to top, rgba(56,189,248,.28), rgba(56,189,248,.12)); box-shadow: inset 0 -2px 0 rgba(56,189,248,.55);}
+    .line:nth-of-type(2) .text mark{background:linear-gradient( to top, rgba(167,139,250,.28), rgba(167,139,250,.12)); box-shadow: inset 0 -2px 0 rgba(167,139,250,.55)}
+    .line:nth-of-type(3) .text mark{background:linear-gradient( to top, rgba(34,211,238,.28), rgba(34,211,238,.12)); box-shadow: inset 0 -2px 0 rgba(34,211,238,.55)}
+    .line:nth-of-type(4) .text mark{background:linear-gradient( to top, rgba(245,158,11,.28), rgba(245,158,11,.12)); box-shadow: inset 0 -2px 0 rgba(245,158,11,.55)}
+    .line:nth-of-type(5) .text mark{background:linear-gradient( to top, rgba(239,68,68,.28), rgba(239,68,68,.12)); box-shadow: inset 0 -2px 0 rgba(239,68,68,.55)}
+    .line:nth-of-type(6) .text mark{background:linear-gradient( to top, rgba(99,102,241,.28), rgba(99,102,241,.12)); box-shadow: inset 0 -2px 0 rgba(99,102,241,.55)}
+    .line:nth-of-type(7) .text mark{background:linear-gradient( to top, rgba(16,185,129,.28), rgba(16,185,129,.12)); box-shadow: inset 0 -2px 0 rgba(16,185,129,.55)}
+
+    .hidden-annotations .bubble{display:none}
+
+    /* Mobile */
+    @media (max-width: 820px){
+      .line{grid-template-columns: 1fr; gap:10px}
+      .bubble:before, .bubble:after{left:20px; top:-10px; transform:rotate(90deg)}
+      .bubble{padding-top:18px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div>
+        <div class="badge">See It · Grade 10 · Storytelling</div>
+        <h1 class="title">Short Story with Annotations (Speech Bubbles)</h1>
+        <p class="meta">Focus: <strong>Setting the scene</strong>, <strong>Building suspense</strong>, <strong>Descriptive language</strong>, <strong>Clear sequence</strong>.</p>
+        <div class="legend" aria-hidden="true">
+          <span><i class="i-scene"></i> Scene-setting</span>
+          <span><i class="i-suspense"></i> Suspense</span>
+          <span><i class="i-lang"></i> Descriptive language</span>
+          <span><i class="i-seq"></i> Sequence</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button id="toggleAll" aria-pressed="false">Show/Hide All Annotations</button></div>
+
+    <section class="story" id="story">
+
+      <!-- LINE 1 -->
+      <div class="line scene">
+        <div class="text">
+          <p>The corridor was <mark>unusually quiet</mark> as Lebo walked towards the library.</p>
+        </div>
+        <aside class="bubble scene-b">
+          <span class="tag scene">Scene</span>
+          The word <em>"unusually"</em> hints that something is off. It sets the mood before anything happens.
+          <small>Skill: establishing atmosphere</small>
+        </aside>
+      </div>
+
+      <!-- LINE 2 -->
+      <div class="line lang">
+        <div class="text">
+          <p>The <mark>flickering fluorescent lights</mark> cast long shadows on the walls, and the sound of her footsteps <mark>echoed</mark> against the tiled floor.</p>
+        </div>
+        <aside class="bubble lang-b">
+          <span class="tag lang">Language</span>
+          Imagery (flickering, long shadows, echoed) creates an eerie atmosphere that the reader can see and hear.
+          <small>Skill: descriptive imagery</small>
+        </aside>
+      </div>
+
+      <!-- LINE 3 -->
+      <div class="line scene">
+        <div class="text">
+          <p>A <mark>cold draft</mark> seeped in through an open window, making her shiver. She glanced around, suddenly aware of how <mark>empty</mark> the building was.</p>
+        </div>
+        <aside class="bubble scene-b">
+          <span class="tag scene">Scene</span>
+          Sensory details (temperature, touch, space) help readers feel the setting and anticipate danger.
+          <small>Skill: multi-sensory detail</small>
+        </aside>
+      </div>
+
+      <!-- LINE 4 -->
+      <div class="line suspense">
+        <div class="text">
+          <p>Just as she reached for the library door, a <mark>loud crash</mark> shattered the silence.</p>
+        </div>
+        <aside class="bubble suspense-b">
+          <span class="tag suspense">Suspense</span>
+          A sudden, disruptive sound acts as a turning point and spikes tension.
+          <small>Skill: inciting incident</small>
+        </aside>
+      </div>
+
+      <!-- LINE 5 -->
+      <div class="line suspense">
+        <div class="text">
+          <p>Her heart <mark>leapt</mark> as she froze, gripping her schoolbag tightly. The sound had come from <mark>inside the library</mark>. Earlier, <mark>Inathi</mark> and <mark>Kamva</mark> had been studying at the back table.</p>
+        </div>
+        <aside class="bubble suspense-b">
+          <span class="tag suspense">Suspense</span>
+          Strong verbs (leapt, froze) + precise location focus the reader’s fear and curiosity.
+          <small>Skill: emotional beat</small>
+        </aside>
+      </div>
+
+      <!-- LINE 6 -->
+      <div class="line lang">
+        <div class="text">
+          <p>Slowly, she pushed the door open. The air <mark>smelled of dust and old books</mark>.</p>
+        </div>
+        <aside class="bubble lang-b">
+          <span class="tag lang">Language</span>
+          Smell adds depth to the scene and grounds the action in a real place.
+          <small>Skill: sensory layering</small>
+        </aside>
+      </div>
+
+      <!-- LINE 7 -->
+      <div class="line seq">
+        <div class="text">
+          <p>A chair lay <mark>overturned</mark> in the corner, and in the dim light, she thought she saw <mark>Lincoln’s silhouette</mark> move—maybe <mark>Ukho</mark> or <mark>Caleb</mark>.</p>
+        </div>
+        <aside class="bubble seq-b">
+          <span class="tag seq">Sequence</span>
+          Visual clue → uncertainty → potential reveal. Ends on a mini cliffhanger to propel the next scene.
+          <small>Skill: sequencing & cliffhanger</small>
+        </aside>
+      </div>
+
+    </section>
+
+    <p class="meta" style="margin-top:18px">Tip: Ask learners to highlight one phrase for each skill (scene, suspense, language, sequence) and explain its effect.</p>
+  </div>
+
+  <script>
+    const story = document.getElementById('story');
+    const toggleAllBtn = document.getElementById('toggleAll');toggleAllBtn.addEventListener('click', () => {
+      story.classList.toggle('hidden-annotations');
+      const pressed = toggleAllBtn.getAttribute('aria-pressed') === 'true';
+      toggleAllBtn.setAttribute('aria-pressed', String(!pressed));
+    });</script>
+</body>
+</html>
